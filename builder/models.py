@@ -53,6 +53,7 @@ class Project(models.Model):
 
     project_description = models.TextField(
         max_length=500,
+        blank=True,
         help_text="Enter a brief description of your project"
     )
 
@@ -106,3 +107,61 @@ class Link(models.Model):
         blank=True,
         help_text="Upload a link icon or image"
     )
+
+class Form(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    display_name = models.CharField(
+        max_length=200,
+        help_text="Enter the name of your form"
+    )  
+
+    textbox_prompt = models.TextField(
+        max_length=700,
+        blank=True,
+        help_text="Describe the question or purpose of this field"
+    )
+
+    checkbox_prompt = models.TextField(
+        max_length=700,
+        blank=True,
+        help_text="Describe the question or purpose of this field"
+    )
+
+    outro = models.TextField(
+        max_length=500,
+        blank=True,
+        help_text="Leave a message or reminder for your form"
+    )
+
+class FormSubmission(models.Model):
+    form = models.ForeignKey(
+        Form,
+        on_delete=models.CASCADE
+    )
+
+    visitor_name = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Enter your name"
+    )  
+
+    visitor_email = models.EmailField(
+        max_length=200,
+        blank=True,
+        help_text="Enter your email"
+    )  
+
+    textbox = models.TextField(
+        max_length=700,
+        blank=True,
+        help_text="Answer the prompt"
+    )
+
+    checkbox = models.BooleanField(
+        default=False,
+    )
+
