@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Me | {{ profile.display_name }}</title>
+</head>
+<body>
+    <h1>{{ profile.display_name }}</h1>
+    <img src="{{ profile.profile_image.url }}">
+    <h2>{{ profile.email }}</h2>
+    <p>{{ profile.bio }}</p>
+</body>
+</html>
