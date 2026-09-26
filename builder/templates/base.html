@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block title %}
+    <title>Personal Website</title>
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li> <a href="{% url 'about' %}">About Me</a></li>
+            <li> <a href="{% url 'projects' %}">Projects</a></li>
+            <li> <a href="{% url 'resumes' %}">Resumes</a></li>
+            <li> <a href="{% url 'links' %}">Links</a></li>
+        </ul>
+    </nav>
+
+    {% block content %}
+
+    {% endblock %}
+</body>
+
+</html>

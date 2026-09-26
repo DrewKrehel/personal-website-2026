@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Projects | {{ profile.display_name }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ profile.display_name }} | Project Portfolio</h1>
+    {% if projects %}
+    <ul>
+        {% for project in projects %}
+        <li>
+            <a href="{{ project.link }}">{{ project.title }}</a>
+            {% if project.image %}
+                <img src="{{ project.image.url }}">
+            {% endif %}
+            {% if project.description %}
+                <p>{{ project.description }}</p>
+            {% endif %}
+
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

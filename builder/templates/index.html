@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+
+{% block title %}
     <title>Home | {{ profile.display_name }}</title>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <h1>{{ profile.display_name }}</h1>
     <h2>Professional Dude</h2>
     <ul>
-        <li> Link 1</li>
-        <li> Link 2</li>
+        <li> <a href="{% url 'about' %}">About Me</a></li>
+        <li> <a href="{% url 'projects' %}">Projects</a></li>
         <li> Link 3</li>
         <li> Link 4</li>
         <li> Link 5</li>
     </ul>
-</body>
-</html>
+{% endblock %}

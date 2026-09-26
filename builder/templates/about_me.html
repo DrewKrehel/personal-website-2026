@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+
+{% block title %}
     <title>About Me | {{ profile.display_name }}</title>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <h1>{{ profile.display_name }}</h1>
     {% if profile.profile_image %}
         <img src="{{ profile.profile_image.url }}">
     {% endif %}
     <h2>{{ profile.email }}</h2>
     <p>{{ profile.bio }}</p>
-</body>
-</html>
+{% endblock %}

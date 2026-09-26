@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Links | {{ profile.display_name }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ profile.display_name }} | Link List</h1>
+    {% if links %}
+    <ul>
+        {% for link in links %}
+        <li>
+            <a href="{{ link.link_url }}">{{ link.display_name }}</a>
+            {% if link.image %}
+                <img src="{{ link.link_image.url }}">
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

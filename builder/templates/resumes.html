@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Resumes | {{ profile.display_name }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ profile.display_name }} | Resume Versions</h1>
+    {% if resumes %}
+    <ul>
+        {% for resume in resumes %}
+        <li>
+            <a href="{{ resume.file.url }}" download>{{ resume.display_name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

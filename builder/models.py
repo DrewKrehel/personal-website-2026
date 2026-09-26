@@ -46,22 +46,22 @@ class Project(models.Model):
     on_delete=models.CASCADE
     )
 
-    project_title = models.CharField(
+    title = models.CharField(
         max_length=200,
         help_text="Enter the name of your project"
     )
 
-    project_description = models.TextField(
+    description = models.TextField(
         max_length=500,
         blank=True,
         help_text="Enter a brief description of your project"
     )
 
-    project_link = models.URLField(
+    link = models.URLField(
         help_text="Enter the URL for your project"
     )
 
-    project_image = models.ImageField(
+    image = models.ImageField(
         upload_to='project_images/',
         blank=True,
         help_text="Upload a project image"
