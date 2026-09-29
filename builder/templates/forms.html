@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <h1>{{ profile.display_name }} | Form</h1>
 
 {% if forms %}
@@ -13,6 +19,8 @@
 
         <form method="POST" action="{% url 'form_submit' %}">
             {% csrf_token %}
+            {{ contact_form }}
+            
             <input type="hidden" name="form_id" value="{{ form.id }}">
 
             

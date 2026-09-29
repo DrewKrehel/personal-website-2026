@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import ContactForm
 from .models import Profile
 from .models import Project
 from .models import Resume
@@ -64,40 +66,37 @@ def links(request):
 def forms(request):
     forms = Form.objects.filter(user__username="drewkrehel")
     profile = Profile.objects.get(user__username="drewkrehel")
+    contact_form = ContactForm()
 
     
     context = {
         'forms': forms,
         'profile': profile,
+        'contact_form' : contact_form,
     }
     
     return render(request, 'forms.html', context=context)
 
 def form_submit(request):
-    if request.method == "POST":
-        print(request.POST)
-        form = Form.objects.get(id=request.POST["form_id"])
-        submission = FormSubmission(
-            form=form,
-            visitor_name=request.POST["visitor_name"],
-            visitor_email=request.POST["visitor_email"],
-            textbox=request.POST["textbox"],
-            checkbox="checkbox" in request.POST
-        )
-        submission.save()
-        return HttpResponse("Form submission received!")
-    else:
-        return HttpResponse("Invalid request")
-
-# def form_submissions(request):
-#     form_submissions = FormSubmission.objects.filter(user__username="drewkrehel")
-#     profile = Profile.objects.get(user__username="drewkrehel")
-
-    
-#     context = {
-#         'form_submissions': form_submissions,
-#         'profile': profile,
-#     }
-    
-#     return render(request, 'form_submissions.html', context=context)
-
+    if request.method != "POST":
+        messages.error(request, "Invalid request.")
+        return redirect("forms")
+    form_id = request.POST.get("form_id")
+    if not form_id:
+        messages.error(request, "We couldn't identify the form you submitted.")
+        return redirect("forms")
+    try:
+        form = Form.objects.get(id=form_id)
+    except Form.DoesNotExist:
+        messages.error(request, "That form is no longer available.")
+        return redirect("forms")
+    submission = FormSubmission(
+        form=form,
+        visitor_name=request.POST.get("visitor_name"),
+        visitor_email=request.POST.get("visitor_email"),
+        textbox=request.POST.get("textbox"),
+        checkbox="checkbox" in request.POST
+    )
+    submission.save()
+    messages.success(request, "Submission success!")
+    return redirect("forms")
