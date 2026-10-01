@@ -23,19 +23,6 @@
             
             <input type="hidden" name="form_id" value="{{ form.id }}">
 
-            
-            <label>Name</label>
-            <input type="text" name="visitor_name">
-            
-            
-            <label>Email</label>
-            <input type="email" name="visitor_email">
-            
-            <label>
-                {{ form.textbox_prompt }}
-            </label>
-            <input type="text" name="textbox">
-
             {% if form.checkbox_prompt %}
                 <label>
                     {{ form.checkbox_prompt }}

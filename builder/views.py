@@ -66,9 +66,8 @@ def links(request):
 def forms(request):
     forms = Form.objects.filter(user__username="drewkrehel")
     profile = Profile.objects.get(user__username="drewkrehel")
-    contact_form = ContactForm()
+    contact_form = ContactForm(textbox_prompt=forms[0].textbox_prompt)
 
-    
     context = {
         'forms': forms,
         'profile': profile,
@@ -81,6 +80,12 @@ def form_submit(request):
     if request.method != "POST":
         messages.error(request, "Invalid request.")
         return redirect("forms")
+    
+    contact_form = ContactForm(request.POST)
+    if not contact_form.is_valid():
+        messages.error(request, "Please correct the errors in the form.")
+        return redirect("forms")
+    
     form_id = request.POST.get("form_id")
     if not form_id:
         messages.error(request, "We couldn't identify the form you submitted.")
@@ -90,12 +95,13 @@ def form_submit(request):
     except Form.DoesNotExist:
         messages.error(request, "That form is no longer available.")
         return redirect("forms")
+    
     submission = FormSubmission(
         form=form,
-        visitor_name=request.POST.get("visitor_name"),
-        visitor_email=request.POST.get("visitor_email"),
-        textbox=request.POST.get("textbox"),
-        checkbox="checkbox" in request.POST
+        visitor_name=contact_form.cleaned_data["visitor_name"],
+        visitor_email=contact_form.cleaned_data["visitor_email"],
+        textbox=contact_form.cleaned_data["textbox"],
+        checkbox=contact_form.cleaned_data["checkbox"]
     )
     submission.save()
     messages.success(request, "Submission success!")
