@@ -66,12 +66,20 @@ def links(request):
 def forms(request):
     forms = Form.objects.filter(user__username="drewkrehel")
     profile = Profile.objects.get(user__username="drewkrehel")
-    contact_form = ContactForm(textbox_prompt=forms[0].textbox_prompt)
+    form_pairs = [
+        (
+            form,
+            ContactForm(
+                textbox_prompt=form.textbox_prompt,
+                checkbox_prompt=form.checkbox_prompt,
+            )
+        )
+        for form in forms
+    ]
 
     context = {
-        'forms': forms,
+        'form_pairs': form_pairs,
         'profile': profile,
-        'contact_form' : contact_form,
     }
     
     return render(request, 'forms.html', context=context)
@@ -79,11 +87,6 @@ def forms(request):
 def form_submit(request):
     if request.method != "POST":
         messages.error(request, "Invalid request.")
-        return redirect("forms")
-    
-    contact_form = ContactForm(request.POST)
-    if not contact_form.is_valid():
-        messages.error(request, "Please correct the errors in the form.")
         return redirect("forms")
     
     form_id = request.POST.get("form_id")
@@ -95,6 +98,17 @@ def form_submit(request):
     except Form.DoesNotExist:
         messages.error(request, "That form is no longer available.")
         return redirect("forms")
+    
+    contact_form = ContactForm(
+        request.POST,
+        textbox_prompt=form.textbox_prompt,
+        checkbox_prompt=form.checkbox_prompt,
+        )
+    
+    if not contact_form.is_valid():
+        messages.error(request, "Please correct the errors in the form.")
+        return redirect("forms")
+    
     
     submission = FormSubmission(
         form=form,

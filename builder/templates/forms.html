@@ -13,8 +13,8 @@
 
 <h1>{{ profile.display_name }} | Form</h1>
 
-{% if forms %}
-    {% for form in forms %}
+{% if form_pairs %}
+    {% for form, contact_form in form_pairs %}
         <h2>{{ form.display_name }}</h2>
 
         <form method="POST" action="{% url 'form_submit' %}">
@@ -23,12 +23,7 @@
             
             <input type="hidden" name="form_id" value="{{ form.id }}">
 
-            {% if form.checkbox_prompt %}
-                <label>
-                    {{ form.checkbox_prompt }}
-                </label>
-                <input type="checkbox" name="checkbox">
-            {% endif %}
+           
 
             {% if form.outro %}
                 <p>{{ form.outro }}</p>
