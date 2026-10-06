@@ -15,9 +15,9 @@
 
 {% if form_pairs %}
     {% for form, contact_form in form_pairs %}
-        <h2>{{ form.display_name }}</h2>
+        <h2>{{ form.form_name }}</h2>
 
-        <form method="POST" action="{% url 'form_submit' %}">
+        <form method="POST" action="{% url 'form_submit' username=profile.user.username %}">
             {% csrf_token %}
             {{ contact_form }}
             

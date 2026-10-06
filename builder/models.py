@@ -114,10 +114,16 @@ class Form(models.Model):
         on_delete=models.CASCADE
     )
 
-    display_name = models.CharField(
+    form_name = models.CharField(
         max_length=200,
         help_text="Enter the name of your form"
-    )  
+    )
+    
+    include_name = models.BooleanField(default=False)
+    name_required = models.BooleanField(default=False)
+    include_email = models.BooleanField(default=False)
+    email_required = models.BooleanField(default=False)
+  
 
     textbox_prompt = models.TextField(
         max_length=700,
@@ -146,12 +152,14 @@ class FormSubmission(models.Model):
     visitor_name = models.CharField(
         max_length=200,
         blank=True,
+        null=True,
         help_text="Enter your name"
     )  
 
     visitor_email = models.EmailField(
         max_length=200,
         blank=True,
+        null=True,
         help_text="Enter your email"
     )  
 

@@ -12,14 +12,17 @@
 </head>
 
 <body>
+    {% if profile %}
     <nav>
         <ul>
-            <li> <a href="{% url 'about' %}">About Me</a></li>
-            <li> <a href="{% url 'projects' %}">Projects</a></li>
-            <li> <a href="{% url 'resumes' %}">Resumes</a></li>
-            <li> <a href="{% url 'links' %}">Links</a></li>
+            <li> <a href="{% url 'about' username=profile.user.username %}">About Me</a></li>
+            <li> <a href="{% url 'projects' username=profile.user.username %}">Projects</a></li>
+            <li> <a href="{% url 'resumes' username=profile.user.username %}">Resumes</a></li>
+            <li> <a href="{% url 'links' username=profile.user.username %}">Links</a></li>
+            <li> <a href="{% url 'forms' username=profile.user.username %}">Forms</a></li>
         </ul>
     </nav>
+    {% endif %}
 
     {% block content %}
 
