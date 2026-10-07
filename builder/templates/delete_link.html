@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Delete Link</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Delete Link</h1>
+
+<p>Are you sure you want to delete "{{ link.display_name }}"?</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <button type="submit">Delete Link</button>
+</form>
+
+<a href="{% url 'manage_links' %}">Cancel</a>
+
+{% endblock %}

@@ -8,6 +8,8 @@
 
 <h1>Dashboard</h1>
 
-<p>You are logged in.</p>
+<p>Welcome, {{ profile.display_name }}!</p>
+
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
 
 {% endblock %}

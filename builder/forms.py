@@ -1,4 +1,5 @@
 from django import forms
+from .models import Profile, Project, Resume, Link
 
 class ContactForm(forms.Form):
     def __init__(
@@ -36,4 +37,42 @@ class ContactForm(forms.Form):
             self.fields["checkbox"] = forms.BooleanField(
                 label=checkbox_prompt,
                 required=False,
-            )
+            ) 
+            
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'display_name',
+            'email',
+            'phone',
+            'bio',
+            'profile_image',
+        ]
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = [
+            'title',
+            'description',
+            'link',
+            'image',
+        ]
+        
+class ResumeForm(forms.ModelForm):
+    class Meta:
+        model = Resume
+        fields = [
+            'display_name',
+            'file',
+        ]
+        
+class LinkForm(forms.ModelForm):
+    class Meta:
+        model = Link
+        fields = [
+            'display_name',
+            'link_url',
+            'link_image',
+        ]

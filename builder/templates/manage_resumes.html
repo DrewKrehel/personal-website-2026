@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Manage Resumes</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Manage Resumes</h1>
+
+<h2>Your Resumes</h2>
+
+{% for resume in resumes %}
+    <h3>{{ resume.display_name }}</h3>
+
+    <a href="{{ resume.file.url }}">View Resume</a>
+    <a href="{% url 'delete_resume' resume_id=resume.id %}">Delete</a>
+{% empty %}
+    <p>You haven't uploaded any resumes yet.</p>
+{% endfor %}
+
+<h2>Upload Resume</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Upload Resume</button>
+</form>
+
+{% endblock %}
