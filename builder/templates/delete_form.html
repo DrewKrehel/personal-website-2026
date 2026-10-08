@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Delete Form</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Delete Form</h1>
+
+<p>Are you sure you want to delete "{{ form_item.form_name }}"?</p>
+
+<p>This will also delete any submissions received through this form.</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <button type="submit">Delete Form</button>
+</form>
+
+<a href="{% url 'manage_forms' %}">Cancel</a>
+
+{% endblock %}

@@ -15,6 +15,7 @@
     {% if profile %}
     <nav>
         <ul>
+            <li> <a href="{% url 'home' username=profile.user.username %}">Home</a></li>
             <li> <a href="{% url 'about' username=profile.user.username %}">About Me</a></li>
             <li> <a href="{% url 'projects' username=profile.user.username %}">Projects</a></li>
             <li> <a href="{% url 'resumes' username=profile.user.username %}">Resumes</a></li>

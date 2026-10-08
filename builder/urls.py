@@ -23,6 +23,23 @@ urlpatterns = [
         views.delete_link,
         name="delete_link",
     ),
+    path("dashboard/forms/", views.manage_forms, name="manage_forms"),
+    path(
+        "dashboard/forms/<int:form_id>/edit/",
+        views.edit_form,
+        name="edit_form",
+    ),
+    path(
+        "dashboard/forms/<int:form_id>/delete/",
+        views.delete_form,
+        name="delete_form",
+    ),
+    path(
+        "dashboard/forms/<int:form_id>/submissions/",
+        views.form_submissions,
+        name="form_submissions",
+    ),
+
     
     path("<str:username>/", views.home, name="home"),
     path("<str:username>/about/", views.about_me, name="about"),

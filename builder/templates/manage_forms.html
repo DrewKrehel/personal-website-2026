@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Manage Forms</title>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+
+<h1>Manage Forms</h1>
+
+<h2>Your Forms</h2>
+
+{% for form_item in forms %}
+    <h3>{{ form_item.form_name }}</h3>
+
+    {% if form_item.include_name %}
+        <p>Name: Included{% if form_item.name_required %} (Required){% endif %}</p>
+    {% endif %}
+
+    {% if form_item.include_email %}
+        <p>Email: Included{% if form_item.email_required %} (Required){% endif %}</p>
+    {% endif %}
+
+    {% if form_item.textbox_prompt %}
+        <p>Text: {{ form_item.textbox_prompt }}</p>
+    {% endif %}
+
+    {% if form_item.checkbox_prompt %}
+        <p>Checkbox: {{ form_item.checkbox_prompt }}</p>
+    {% endif %}
+
+    {% if form_item.outro %}
+        <p>Outro: {{ form_item.outro }}</p>
+    {% endif %}
+
+    <a href="{% url 'edit_form' form_id=form_item.id %}">Edit</a>
+    <a href="{% url 'delete_form' form_id=form_item.id %}">Delete</a>
+    <a href="{% url 'form_submissions' form_id=form_item.id %}">View Submissions</a>
+{% empty %}
+    <p>You haven't created any forms yet.</p>
+{% endfor %}
+
+<h2>Create Form</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Create Form</button>
+</form>
+
+{% endblock %}

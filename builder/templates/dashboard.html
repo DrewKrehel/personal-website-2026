@@ -10,6 +10,41 @@
 
 <p>Welcome, {{ profile.display_name }}!</p>
 
+<h2>Profile</h2>
+
 <a href="{% url 'edit_profile' %}">Edit Profile</a>
+
+<h2>Content</h2>
+
+<ul>
+    <li>
+        <a href="{% url 'manage_projects' %}">Manage Projects</a>
+    </li>
+
+    <li>
+        <a href="{% url 'manage_resumes' %}">Manage Resumes</a>
+    </li>
+
+    <li>
+        <a href="{% url 'manage_links' %}">Manage Links</a>
+    </li>
+
+    <li>
+        <a href="{% url 'manage_forms' %}">Manage Forms</a>
+    </li>
+</ul>
+
+<h2>Website</h2>
+
+<a href="{% url 'home' username=profile.user.username %}">
+    View My Website
+</a>
+
+<h2>Account</h2>
+
+<form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Log Out</button>
+</form>
 
 {% endblock %}

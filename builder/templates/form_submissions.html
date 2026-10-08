@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Form Submissions</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ form_item.form_name }} Submissions</h1>
+
+{% for submission in submissions %}
+
+    <article>
+        {% if submission.visitor_name %}
+            <p><strong>Name:</strong> {{ submission.visitor_name }}</p>
+        {% endif %}
+
+        {% if submission.visitor_email %}
+            <p><strong>Email:</strong> {{ submission.visitor_email }}</p>
+        {% endif %}
+
+        {% if submission.textbox %}
+            <p><strong>Response:</strong> {{ submission.textbox }}</p>
+        {% endif %}
+
+        <p>
+            <strong>Checkbox:</strong>
+            {% if submission.checkbox %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </p>
+    </article>
+
+{% empty %}
+    <p>You haven't received any submissions yet.</p>
+{% endfor %}
+
+<a href="{% url 'manage_forms' %}">Back to Manage Forms</a>
+
+{% endblock %}

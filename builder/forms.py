@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile, Project, Resume, Link
+from .models import Profile, Project, Resume, Link, Form
 
 class ContactForm(forms.Form):
     def __init__(
@@ -75,4 +75,18 @@ class LinkForm(forms.ModelForm):
             'display_name',
             'link_url',
             'link_image',
+        ]
+        
+class FormBuilderForm(forms.ModelForm):
+    class Meta:
+        model = Form
+        fields = [
+            'form_name',
+            'include_name',
+            'name_required',
+            'include_email',
+            'email_required',
+            'textbox_prompt',
+            'checkbox_prompt',
+            'outro',
         ]

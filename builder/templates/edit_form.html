@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Edit Project</title>
+<title>Edit Form</title>
 {% endblock %}
 
 {% block content %}
 
-<h1>Edit Project</h1>
+<h1>Edit Form</h1>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit">Save Project</button>
+    <button type="submit">Save Form</button>
 </form>
 
 <a href="{% url 'manage_forms' %}">Cancel</a>

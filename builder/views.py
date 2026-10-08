@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import ContactForm, ProfileForm, ProjectForm, ResumeForm, LinkForm
+from .forms import ContactForm, ProfileForm, ProjectForm, ResumeForm, LinkForm, FormBuilderForm
 from .models import Profile, Project, Resume, Link, Form, FormSubmission
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -186,6 +186,94 @@ def delete_link(request, link_id):
         request,
         'delete_link.html',
         {'link': link}
+    )
+    
+@login_required
+def manage_forms(request):
+    forms = Form.objects.filter(user=request.user)
+    
+    if request.method == "POST":
+        form = FormBuilderForm(request.POST)
+
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.user = request.user
+            new_form.save()
+            return redirect("manage_forms")
+        
+    else:
+        form = FormBuilderForm()
+
+    return render(
+        request,
+        'manage_forms.html',
+        {
+            'forms': forms,
+            'form': form,
+        }
+    )
+    
+@login_required
+def edit_form(request, form_id):
+    form_item = Form.objects.get(
+        id=form_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form = FormBuilderForm(
+            request.POST,
+            instance=form_item
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("manage_forms")
+
+    else:
+        form = FormBuilderForm(instance=form_item)
+
+    return render(
+        request,
+        'edit_form.html',
+        {'form': form}
+    )
+    
+@login_required
+def delete_form(request, form_id):
+    form_item = Form.objects.get(
+        id=form_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form_item.delete()
+        return redirect("manage_forms")
+
+    return render(
+        request,
+        'delete_form.html',
+        {'form_item': form_item}
+    )
+    
+@login_required
+def form_submissions(request, form_id):
+    form_item = Form.objects.get(
+        id=form_id,
+        user=request.user
+    )
+
+    submissions = FormSubmission.objects.filter(
+        form=form_item
+    )
+
+    return render(
+        request,
+        'form_submissions.html',
+        {
+            'form_item': form_item,
+            'submissions': submissions,
+        }
     )
 
 def home(request, username):
