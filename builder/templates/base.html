@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    {% if profile %}
+    {% if profile and not is_homepage %}
     <nav>
         <ul>
             <li> <a href="{% url 'home' username=profile.user.username %}">Home</a></li>

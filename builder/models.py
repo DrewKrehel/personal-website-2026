@@ -9,6 +9,23 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE
     )
+    
+    featured_section = models.CharField(
+        max_length=20,
+        choices=[
+            ("about", "About Me"),
+            ("projects", "Projects"),
+            ("resumes", "Resumes"),
+            ("links", "Links"),
+            ("forms", "Forms"),
+        ],
+        blank=True,
+    )
+    
+    featured_object_id = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+    )
 
     display_name = models.CharField(
         max_length=200,
@@ -100,6 +117,11 @@ class Link(models.Model):
     
     link_url = models.URLField(
         help_text="Enter the URL for your link"
+    )
+    
+    is_social = models.BooleanField(
+        default=False,
+        help_text="Display this link in the homepage social icon banner"
     )
     
     link_image = models.ImageField(

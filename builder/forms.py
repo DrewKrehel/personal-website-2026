@@ -40,6 +40,75 @@ class ContactForm(forms.Form):
             ) 
             
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user is None:
+            return
+
+        section = (
+            self.data.get("featured_section")
+            or self.instance.featured_section
+        )
+        
+        if section == "about":
+            self.fields["featured_object_id"].choices = [
+                ("", "Nothing selected"),
+            ]
+
+            if self.is_bound:
+                self.data = self.data.copy()
+                self.data["featured_object_id"] = ""
+        
+        if section == "about":
+            self.initial["featured_object_id"] = None
+
+        print("Featured section:", repr(section))
+
+        if section == "projects":
+            objects = Project.objects.filter(user=user)
+            choices = [(obj.id, obj.title) for obj in objects]
+
+        elif section == "resumes":
+            objects = Resume.objects.filter(user=user)
+            choices = [(obj.id, obj.display_name) for obj in objects]
+
+        elif section == "links":
+            objects = Link.objects.filter(user=user)
+            choices = [(obj.id, obj.display_name) for obj in objects]
+
+        elif section == "forms":
+            objects = Form.objects.filter(user=user)
+            choices = [(obj.id, obj.form_name) for obj in objects]
+
+        else:
+            choices = []
+
+        self.fields["featured_object_id"].choices = [
+            ("", "Nothing selected"),
+            *choices,
+        ]
+    
+    featured_section = forms.ChoiceField(
+        choices=[
+            ("", "Nothing featured"),
+            ("about", "About Me"),
+            ("projects", "Projects"),
+            ("resumes", "Resumes"),
+            ("links", "Links"),
+            ("forms", "Forms"),
+        ],
+        required=False,
+        label="Featured section",
+    )
+    
+    featured_object_id = forms.TypedChoiceField(
+        choices=[("", "Nothing selected")],
+        required=False,
+        coerce=int,
+        empty_value=None,
+        label="Featured object",
+    )
     class Meta:
         model = Profile
         fields = [
@@ -48,6 +117,8 @@ class ProfileForm(forms.ModelForm):
             'phone',
             'bio',
             'profile_image',
+            'featured_section',
+            'featured_object_id',
         ]
 
 class ProjectForm(forms.ModelForm):
@@ -90,3 +161,4 @@ class FormBuilderForm(forms.ModelForm):
             'checkbox_prompt',
             'outro',
         ]
+        

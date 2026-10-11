@@ -20,14 +20,22 @@ def edit_profile(request):
     profile = Profile.objects.get(user=request.user)
 
     if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = ProfileForm(
+            request.POST,
+            request.FILES,
+            instance=profile,
+            user=request.user,
+        )
 
         if form.is_valid():
             form.save()
             return redirect("dashboard")
 
     else:
-        form = ProfileForm(instance=profile)
+        form = ProfileForm(
+            instance=profile,
+            user=request.user,
+        )
 
     return render(
         request,
@@ -278,11 +286,49 @@ def form_submissions(request, form_id):
 
 def home(request, username):
     profile = Profile.objects.get(user__username=username)
-    
+
+    featured_object = None
+
+    if profile.featured_section and profile.featured_object_id:
+        if profile.featured_section == "about":
+            featured_object = profile
+
+        elif profile.featured_section == "projects":
+            featured_object = Project.objects.filter(
+                id=profile.featured_object_id,
+                user=profile.user,
+            ).first()
+
+        elif profile.featured_section == "resumes":
+            featured_object = Resume.objects.filter(
+                id=profile.featured_object_id,
+                user=profile.user,
+            ).first()
+
+        elif profile.featured_section == "links":
+            featured_object = Link.objects.filter(
+                id=profile.featured_object_id,
+                user=profile.user,
+            ).first()
+
+        elif profile.featured_section == "forms":
+            featured_object = Form.objects.filter(
+                id=profile.featured_object_id,
+                user=profile.user,
+            ).first()
+
+    social_links = Link.objects.filter(
+        user=profile.user,
+        is_social=True,
+    )
+
     context = {
         'profile': profile,
+        'is_homepage': True,
+        'featured_object': featured_object,
+        'social_links': social_links,
     }
-    
+
     return render(request, 'index.html', context=context)
 
 def about_me(request, username):

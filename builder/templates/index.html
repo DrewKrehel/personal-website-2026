@@ -6,12 +6,75 @@
 
 {% block content %}
     <h1>{{ profile.display_name }}</h1>
-    <h2>Professional Dude</h2>
-    <ul>
-        <li> <a href="{% url 'about' username=profile.user.username %}">About Me</a></li>
-        <li> <a href="{% url 'projects' username=profile.user.username %}">Projects</a></li>
-        <li> Link 3</li>
-        <li> Link 4</li>
-        <li> Link 5</li>
-    </ul>
+
+    {% if featured_object %}
+        <section>
+            <h2>Featured Content</h2>
+
+            {% if profile.featured_section == "about" %}
+                <h3>{{ featured_object.display_name }}</h3>
+                <p>{{ featured_object.bio }}</p>
+                {% if featured_object.profile_image %}
+                    <img src="{{ featured_object.profile_image.url }}" alt="{{ featured_object.display_name }}">
+                {% endif %}
+                <a href="{% url 'about' username=profile.user.username %}">Read More</a>
+
+            {% elif profile.featured_section == "projects" %}
+                <h3>{{ featured_object.title }}</h3>
+                {% if featured_object.image %}
+                    <img src="{{ featured_object.image.url }}" alt="{{ featured_object.title }}">
+                {% endif %}
+                <p>{{ featured_object.description }}</p>
+                <a href="{{ featured_object.link }}">Visit Project</a>
+                <a href="{% url 'projects' username=profile.user.username %}">View All Projects</a>
+
+            {% elif profile.featured_section == "resumes" %}
+                <h3>{{ featured_object.display_name }}</h3>
+                <a href="{{ featured_object.file.url }}">View or Download Resume</a>
+                <a href="{% url 'resumes' username=profile.user.username %}">View All Resumes</a>
+
+            {% elif profile.featured_section == "links" %}
+                <h3>{{ featured_object.display_name }}</h3>
+                {% if featured_object.link_image %}
+                    <img src="{{ featured_object.link_image.url }}" alt="{{ featured_object.display_name }}">
+                {% endif %}
+                <a href="{{ featured_object.link_url }}">Visit Link</a>
+                <a href="{% url 'links' username=profile.user.username %}">View All Links</a>
+
+            {% elif profile.featured_section == "forms" %}
+                <h3>{{ featured_object.form_name }}</h3>
+                <a href="{% url 'forms' username=profile.user.username %}">Open Forms</a>
+            {% endif %}
+        </section>
+    {% endif %}
+
+    {% if social_links %}
+        <section>
+            <h2>Social Links</h2>
+            <ul>
+                {% for link in social_links %}
+                    <li>
+                        <a href="{{ link.link_url }}">
+                            {% if link.link_image %}
+                                <img src="{{ link.link_image.url }}" alt="{{ link.display_name }}">
+                            {% else %}
+                                {{ link.display_name }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <nav>
+        <h2>Explore</h2>
+        <ul>
+            <li><a href="{% url 'about' username=profile.user.username %}">About Me</a></li>
+            <li><a href="{% url 'projects' username=profile.user.username %}">Projects</a></li>
+            <li><a href="{% url 'resumes' username=profile.user.username %}">Resumes</a></li>
+            <li><a href="{% url 'links' username=profile.user.username %}">Links</a></li>
+            <li><a href="{% url 'forms' username=profile.user.username %}">Forms</a></li>
+        </ul>
+    </nav>
 {% endblock %}
