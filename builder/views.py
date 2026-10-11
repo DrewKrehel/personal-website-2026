@@ -289,11 +289,11 @@ def home(request, username):
 
     featured_object = None
 
-    if profile.featured_section and profile.featured_object_id:
-        if profile.featured_section == "about":
-            featured_object = profile
+    if profile.featured_section == "about":
+        featured_object = profile
 
-        elif profile.featured_section == "projects":
+    elif profile.featured_section and profile.featured_object_id:
+        if profile.featured_section == "projects":
             featured_object = Project.objects.filter(
                 id=profile.featured_object_id,
                 user=profile.user,
