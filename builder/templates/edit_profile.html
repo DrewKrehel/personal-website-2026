@@ -15,6 +15,29 @@
     <button type="submit">Save Profile</button>
 </form>
 
-<a href="{% url 'edit_profile' %}">Cancel</a>
+{{ featured_objects|json_script:"featured-objects-data" }}
+
+<script>
+    const sectionSelect = document.getElementById("id_featured_section");
+    const objectSelect = document.getElementById("id_featured_object_id");
+
+    const featuredObjects = JSON.parse(
+        document.getElementById("featured-objects-data").textContent
+    );
+
+    sectionSelect.addEventListener("change", function () {
+        const section = sectionSelect.value;
+        const objects = featuredObjects[section] || [];
+
+        objectSelect.replaceChildren();
+        objectSelect.add(new Option("Nothing selected", ""));
+
+        objects.forEach(function (object) {
+            objectSelect.add(new Option(object.label, object.id));
+        });
+    });
+</script>
+
+<a href="{% url 'dashboard' %}">Cancel</a>
 
 {% endblock %}

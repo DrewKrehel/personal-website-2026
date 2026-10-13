@@ -146,6 +146,7 @@ class LinkForm(forms.ModelForm):
             'display_name',
             'link_url',
             'link_image',
+            'is_social',
         ]
         
 class FormBuilderForm(forms.ModelForm):

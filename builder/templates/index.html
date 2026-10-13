@@ -42,28 +42,46 @@
                 <a href="{% url 'links' username=profile.user.username %}">View All Links</a>
 
             {% elif profile.featured_section == "forms" %}
-                <h3>{{ featured_object.form_name }}</h3>
-                <a href="{% url 'forms' username=profile.user.username %}">Open Forms</a>
+                <h3>{{ featured_form.form_name }}</h3>
+                
+                <form method="post" action="{% url 'form_submit' username=profile.user.username %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="home">
+                    <input type="hidden" name="form_id" value="{{ featured_form.id }}">
+                                
+                    {{ contact_form.as_p }}
+                
+                    <button type="submit">Submit</button>
+                </form>
+                
+                <a href="{% url 'forms' username=profile.user.username %}">View All Forms</a>
             {% endif %}
         </section>
     {% endif %}
 
+    
     {% if social_links %}
-        <section>
-            <h2>Social Links</h2>
-            <ul>
+        <section class="social-banner">
+            <h2>Connect With Me</h2>
+
+            <div class="social-icons">
                 {% for link in social_links %}
-                    <li>
-                        <a href="{{ link.link_url }}">
-                            {% if link.link_image %}
-                                <img src="{{ link.link_image.url }}" alt="{{ link.display_name }}">
-                            {% else %}
-                                {{ link.display_name }}
-                            {% endif %}
-                        </a>
-                    </li>
+                    <a href="{{ link.link_url }}"
+                    class="social-icon"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="{{ link.display_name }}">
+
+                        {% if link.link_image %}
+                            <img src="{{ link.link_image.url }}"
+                                alt="{{ link.display_name }}">
+                        {% else %}
+                            <span>{{ link.display_name }}</span>
+                        {% endif %}
+
+                    </a>
                 {% endfor %}
-            </ul>
+            </div>
         </section>
     {% endif %}
 

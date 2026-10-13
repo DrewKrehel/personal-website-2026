@@ -12,6 +12,35 @@
 </head>
 
 <body>
+    {% if messages %}
+    <div id="notifications">
+        {% for message in messages %}
+        <div class="notification {{ message.tags }}">
+            <span>{{ message }}</span>
+            <button type="button" class="notification-close" aria-label="Dismiss notification">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if profile %}
+        {% if user.is_authenticated and user == profile.user %}
+        <div class="owner-menu">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+        
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div class="owner-menu">
+            <a href="{% url 'login' %}?next={% url 'dashboard' %}">Log In</a>
+        </div>
+        {% endif %}
+    {% endif %}
+
+
     {% if profile and not is_homepage %}
     <nav>
         <ul>
@@ -28,6 +57,20 @@
     {% block content %}
 
     {% endblock %}
+
+    <script>
+        document.querySelectorAll(".notification").forEach((notification) => {
+            const closeButton = notification.querySelector(".notification-close");
+
+            closeButton.addEventListener("click", () => {
+                notification.remove();
+            });
+
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        });
+    </script>
 </body>
 
 </html>
