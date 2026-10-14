@@ -38,7 +38,7 @@ class ContactForm(forms.Form):
                 label=checkbox_prompt,
                 required=False,
             ) 
-            
+
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -130,7 +130,7 @@ class ProjectForm(forms.ModelForm):
             'link',
             'image',
         ]
-        
+
 class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
@@ -138,7 +138,7 @@ class ResumeForm(forms.ModelForm):
             'display_name',
             'file',
         ]
-        
+
 class LinkForm(forms.ModelForm):
     class Meta:
         model = Link
@@ -148,18 +148,32 @@ class LinkForm(forms.ModelForm):
             'link_image',
             'is_social',
         ]
-        
+
 class FormBuilderForm(forms.ModelForm):
     class Meta:
         model = Form
         fields = [
-            'form_name',
-            'include_name',
-            'name_required',
-            'include_email',
-            'email_required',
-            'textbox_prompt',
-            'checkbox_prompt',
-            'outro',
+            "form_name",
+            "store_submissions",
+            "email_submissions",
+            "include_name",
+            "name_required",
+            "include_email",
+            "email_required",
+            "textbox_prompt",
+            "checkbox_prompt",
+            "outro",
         ]
-        
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        store_submissions = cleaned_data.get("store_submissions")
+        email_submissions = cleaned_data.get("email_submissions")
+
+        if not store_submissions and not email_submissions:
+            raise forms.ValidationError(
+                "You must enable database storage, email delivery, or both."
+            )
+
+        return cleaned_data

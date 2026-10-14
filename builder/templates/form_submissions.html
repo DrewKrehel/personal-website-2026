@@ -31,6 +31,10 @@
                 No
             {% endif %}
         </p>
+
+        <a href="{% url 'delete_submission' submission_id=submission.id %}">
+            Delete Submission
+        </a>
     </article>
 
 {% empty %}

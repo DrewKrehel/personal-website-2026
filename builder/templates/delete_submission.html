@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Delete Submission</title>
+{% endblock %}
+
+{% block content %}
+<h1>Delete Submission</h1>
+
+<p>Are you sure you want to delete this submission?</p>
+
+{% if submission.visitor_name %}
+<p><strong>Name:</strong> {{ submission.visitor_name }}</p>
+{% endif %}
+
+{% if submission.textbox %}
+<p><strong>Response:</strong> {{ submission.textbox }}</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+</form>
+
+<a href="{% url 'form_submissions' form_id=submission.form.id %}">
+    Cancel
+</a>
+{% endblock %}

@@ -11,7 +11,7 @@ from .forms import (
 from .models import Profile, Project, Resume, Link, Form, FormSubmission
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
+from django.core.mail import send_mail
 
 @login_required
 def dashboard(request):
@@ -254,6 +254,25 @@ def delete_form(request, form_id):
 
 
 @login_required
+def delete_submission(request, submission_id):
+    submission = FormSubmission.objects.get(
+        id=submission_id,
+        form__user=request.user,
+    )
+
+    if request.method == "POST":
+        form_id = submission.form.id
+        submission.delete()
+        messages.success(request, "Submission deleted successfully.")
+        return redirect("form_submissions", form_id=form_id)
+
+    return render(
+        request,
+        "delete_submission.html",
+        {"submission": submission},
+    )
+
+@login_required
 def form_submissions(request, form_id):
     form_item = Form.objects.get(id=form_id, user=request.user)
 
@@ -439,6 +458,7 @@ def form_submit(request, username):
         messages.error(request, "Please correct the errors in the form.")
         return redirect(redirect_view, username=username)
 
+    # Save the submission temporarily so a failed email cannot lose it.
     submission = FormSubmission(
         form=form,
         visitor_name=contact_form.cleaned_data.get("visitor_name"),
@@ -446,8 +466,67 @@ def form_submit(request, username):
         textbox=contact_form.cleaned_data.get("textbox"),
         checkbox=contact_form.cleaned_data.get("checkbox"),
     )
-
     submission.save()
-    messages.success(request, "Submission success!")
+
+    email_sent = False
+
+    if form.email_submissions:
+        if not form.user.email:
+            messages.error(
+                request,
+                "The form owner's account has no email address. "
+                "The submission was saved so it won't be lost.",
+            )
+        else:
+            # Build the email from the submitted answers.
+            email_lines = [
+                f"Form: {form.form_name}",
+                "",
+            ]
+
+            if submission.visitor_name:
+                email_lines.append(f"Name: {submission.visitor_name}")
+
+            if submission.visitor_email:
+                email_lines.append(f"Email: {submission.visitor_email}")
+
+            if submission.textbox:
+                email_lines.extend(
+                    [
+                        "",
+                        f"{form.textbox_prompt or 'Response'}:",
+                        submission.textbox,
+                    ]
+                )
+
+            if form.checkbox_prompt:
+                checkbox_answer = "Yes" if submission.checkbox else "No"
+                email_lines.append(f"{form.checkbox_prompt}: {checkbox_answer}")
+
+            try:
+                send_mail(
+                    subject=f"New submission: {form.form_name}",
+                    message="\n".join(email_lines),
+                    from_email=None,
+                    recipient_list=[form.user.email],
+                    fail_silently=False,
+                )
+                email_sent = True
+            except Exception:
+                messages.error(
+                    request,
+                    "Email delivery failed. The submission was saved "
+                    "so the response won't be lost.",
+                )
+
+    # Keep the submission permanently if database storage is enabled.
+    # Otherwise, remove the temporary copy only after successful email.
+    if not form.store_submissions and email_sent:
+        submission.delete()
+
+    if not form.email_submissions:
+        messages.success(request, "Submission received successfully.")
+    elif email_sent:
+        messages.success(request, "Submission received and emailed successfully.")
 
     return redirect(redirect_view, username=username)

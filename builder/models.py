@@ -141,6 +141,16 @@ class Form(models.Model):
         help_text="Enter the name of your form"
     )
     
+    store_submissions = models.BooleanField(
+        default=True,
+        help_text="Save responses in the dashboard"
+    )
+
+    email_submissions = models.BooleanField(
+        default=False,
+        help_text="Email responses to your account email address"
+    )
+    
     include_name = models.BooleanField(default=False)
     name_required = models.BooleanField(default=False)
     include_email = models.BooleanField(default=False)

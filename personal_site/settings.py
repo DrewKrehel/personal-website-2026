@@ -129,4 +129,7 @@ MAILERS = {
     },
 }
 
+# Email settings for local development
+DEFAULT_FROM_EMAIL = "noreply@localhost"
+
 LOGIN_REDIRECT_URL = "/dashboard/"

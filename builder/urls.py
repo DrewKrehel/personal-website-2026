@@ -5,7 +5,11 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/profile/", views.edit_profile, name="edit_profile"),
     path("dashboard/projects/", views.manage_projects, name="manage_projects"),
-    path("dashboard/projects/<int:project_id>/edit/", views.edit_project, name="edit_project"),
+    path(
+        "dashboard/projects/<int:project_id>/edit/",
+        views.edit_project,
+        name="edit_project",
+    ),
     path(
         "dashboard/projects/<int:project_id>/delete/",
         views.delete_project,
@@ -39,7 +43,11 @@ urlpatterns = [
         views.form_submissions,
         name="form_submissions",
     ),
-
+    path(
+        "dashboard/submissions/<int:submission_id>/delete/",
+        views.delete_submission,
+        name="delete_submission",
+    ),
     
     path("<str:username>/", views.home, name="home"),
     path("<str:username>/about/", views.about_me, name="about"),
@@ -48,5 +56,4 @@ urlpatterns = [
     path("<str:username>/links/", views.links, name="links"),
     path("<str:username>/forms/", views.forms, name="forms"),
     path("<str:username>/forms/submit/", views.form_submit, name="form_submit"),
-    
 ]
