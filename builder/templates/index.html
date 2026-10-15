@@ -14,9 +14,9 @@
 
         <h1 class="profile-name">{{ profile.display_name }}</h1>
 
-        {% if profile.bio %}
+        <!-- {% if profile.bio %}
         <p class="profile-bio">{{ profile.bio }}</p>
-        {% endif %}
+        {% endif %} -->
     </header>
 
     {% if featured_object %}
@@ -24,13 +24,13 @@
         <h2 class="section-title">Featured</h2>
 
         {% if profile.featured_section == "about" %}
-        <h3>{{ featured_object.display_name }}</h3>
+        <!-- <h3>{{ featured_object.display_name }}</h3> -->
         <p>{{ featured_object.bio }}</p>
 
-        {% if featured_object.profile_image %}
+        <!-- {% if featured_object.profile_image %}
         <img class="featured-image" src="{{ featured_object.profile_image.url }}"
             alt="{{ featured_object.display_name }}">
-        {% endif %}
+        {% endif %} -->
 
         <a class="button-link" href="{% url 'about' username=profile.user.username %}">
             Read More

@@ -5,49 +5,98 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+<main class="dashboard-page">
+    <a class="back-link" href="{% url 'dashboard' %}">
+        &larr; Back to Dashboard
+    </a>
 
-<h1>Manage Forms</h1>
+    <header class="dashboard-header">
+        <h1>Manage Forms</h1>
+        <p>Create forms, customize their fields, and review visitor responses.</p>
+    </header>
 
-<h2>Your Forms</h2>
+    <section class="dashboard-section">
+        <h2>Your Forms</h2>
 
-{% for form_item in forms %}
-    <h3>{{ form_item.form_name }}</h3>
+        <div class="dashboard-list">
+            {% for form_item in forms %}
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>{{ form_item.form_name }}</h3>
 
-    {% if form_item.include_name %}
-        <p>Name: Included{% if form_item.name_required %} (Required){% endif %}</p>
-    {% endif %}
+                    <div class="form-summary">
+                        {% if form_item.include_name %}
+                        <p>
+                            <strong>Name:</strong>
+                            Included{% if form_item.name_required %} (Required){% else %} (Optional){% endif %}
+                        </p>
+                        {% endif %}
 
-    {% if form_item.include_email %}
-        <p>Email: Included{% if form_item.email_required %} (Required){% endif %}</p>
-    {% endif %}
+                        {% if form_item.include_email %}
+                        <p>
+                            <strong>Email:</strong>
+                            Included{% if form_item.email_required %} (Required){% else %} (Optional){% endif %}
+                        </p>
+                        {% endif %}
 
-    {% if form_item.textbox_prompt %}
-        <p>Text: {{ form_item.textbox_prompt }}</p>
-    {% endif %}
+                        {% if form_item.textbox_prompt %}
+                        <p>
+                            <strong>Text question:</strong>
+                            {{ form_item.textbox_prompt }}
+                        </p>
+                        {% endif %}
 
-    {% if form_item.checkbox_prompt %}
-        <p>Checkbox: {{ form_item.checkbox_prompt }}</p>
-    {% endif %}
+                        {% if form_item.checkbox_prompt %}
+                        <p>
+                            <strong>Checkbox:</strong>
+                            {{ form_item.checkbox_prompt }}
+                        </p>
+                        {% endif %}
 
-    {% if form_item.outro %}
-        <p>Outro: {{ form_item.outro }}</p>
-    {% endif %}
+                        {% if form_item.outro %}
+                        <p>
+                            <strong>Closing message:</strong>
+                            {{ form_item.outro }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
 
-    <a href="{% url 'edit_form' form_id=form_item.id %}">Edit</a>
-    <a href="{% url 'delete_form' form_id=form_item.id %}">Delete</a>
-    <a href="{% url 'form_submissions' form_id=form_item.id %}">View Submissions</a>
-{% empty %}
-    <p>You haven't created any forms yet.</p>
-{% endfor %}
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'edit_form' form_id=form_item.id %}">
+                        Edit
+                    </a>
 
-<h2>Create Form</h2>
+                    <a class="button-link" href="{% url 'delete_form' form_id=form_item.id %}">
+                        Delete
+                    </a>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
+                    <a class="button-link" href="{% url 'form_submissions' form_id=form_item.id %}">
+                        View Submissions
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <p class="empty-state">
+                You haven't created any forms yet.
+            </p>
+            {% endfor %}
+        </div>
+    </section>
 
-    <button type="submit">Create Form</button>
-</form>
+    <section class="dashboard-section">
+        <h2>Create Form</h2>
 
+        <div class="dashboard-panel">
+            <form method="POST" class="dashboard-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button class="primary-button" type="submit">
+                    Create Form
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
 {% endblock %}

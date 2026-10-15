@@ -5,33 +5,37 @@
 {% endblock %}
 
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
+<main class="profile-page">
+    <header class="profile-header">
+        <h1 class="profile-name">{{ profile.display_name }}</h1>
+        <p class="profile-bio">Get in Touch</p>
+    </header>
 
-<h1>{{ profile.display_name }} | Form</h1>
+    {% if form_pairs %}
+    <section class="public-form-list" aria-label="Contact forms">
+        {% for form, contact_form in form_pairs %}
+        <article class="public-form-card">
+            <h2 class="section-title">{{ form.form_name }}</h2>
 
-{% if form_pairs %}
-    {% for form, contact_form in form_pairs %}
-        <h2>{{ form.form_name }}</h2>
+            <form class="profile-form" method="POST" action="{% url 'form_submit' username=profile.user.username %}">
+                {% csrf_token %}
+                {{ contact_form.as_p }}
 
-        <form method="POST" action="{% url 'form_submit' username=profile.user.username %}">
-            {% csrf_token %}
-            {{ contact_form }}
-            
-            <input type="hidden" name="form_id" value="{{ form.id }}">
+                <input type="hidden" name="form_id" value="{{ form.id }}">
 
-           
+                <button class="primary-button" type="submit">
+                    Submit
+                </button>
 
-            {% if form.outro %}
-                <p>{{ form.outro }}</p>
-            {% endif %}
-
-            <button type="submit">Submit</button>
-        </form>
-    {% endfor %}
-{% endif %}
-
+                {% if form.outro %}
+                <p class="form-outro">{{ form.outro }}</p>
+                {% endif %}
+            </form>
+        </article>
+        {% endfor %}
+    </section>
+    {% else %}
+    <p class="empty-state">There are no forms available right now.</p>
+    {% endif %}
+</main>
 {% endblock %}

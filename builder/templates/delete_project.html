@@ -5,17 +5,35 @@
 {% endblock %}
 
 {% block content %}
+<main class="dashboard-page">
+    <a class="back-link" href="{% url 'manage_projects' %}">
+        &larr; Back to Projects
+    </a>
 
-<h1>Delete Project</h1>
+    <section class="dashboard-panel delete-confirmation">
+        <h1>Delete Project</h1>
 
-<p>Are you sure you want to delete "{{ project.title }}"?</p>
+        <p>
+            Are you sure you want to delete
+            <strong>{{ project.title }}</strong>?
+        </p>
 
-<form method="POST">
-    {% csrf_token %}
+        <p class="delete-warning">
+            This action cannot be undone.
+        </p>
 
-    <button type="submit">Delete Project</button>
-</form>
+        <div class="confirmation-actions">
+            <form method="POST">
+                {% csrf_token %}
+                <button class="danger-button" type="submit">
+                    Delete Project
+                </button>
+            </form>
 
-<a href="{% url 'manage_projects' %}">Cancel</a>
-
+            <a class="button-link" href="{% url 'manage_projects' %}">
+                Cancel
+            </a>
+        </div>
+    </section>
+</main>
 {% endblock %}

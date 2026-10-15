@@ -5,46 +5,118 @@
 {% endblock %}
 
 {% block content %}
+<main class="dashboard-page">
+    <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p>Welcome, {{ profile.display_name }}! Manage your personal website from here.</p>
+    </header>
 
-<h1>Dashboard</h1>
+    <section class="dashboard-section">
+        <h2>Profile</h2>
 
-<p>Welcome, {{ profile.display_name }}!</p>
+        <div class="dashboard-card">
+            <div class="dashboard-card-content">
+                <h3>Your Personal Information</h3>
+                <p>Update your name, biography, profile photo, and featured content.</p>
+            </div>
 
-<h2>Profile</h2>
+            <div class="dashboard-card-actions">
+                <a class="button-link" href="{% url 'edit_profile' %}">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </section>
 
-<a href="{% url 'edit_profile' %}">Edit Profile</a>
+    <section class="dashboard-section">
+        <h2>Content</h2>
 
-<h2>Content</h2>
+        <div class="dashboard-list">
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>Projects</h3>
+                    <p>Showcase your work and portfolio projects.</p>
+                </div>
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'manage_projects' %}">
+                        Manage Projects
+                    </a>
+                </div>
+            </article>
 
-<ul>
-    <li>
-        <a href="{% url 'manage_projects' %}">Manage Projects</a>
-    </li>
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>Resumes</h3>
+                    <p>Upload and manage the resume versions visitors can access.</p>
+                </div>
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'manage_resumes' %}">
+                        Manage Resumes
+                    </a>
+                </div>
+            </article>
 
-    <li>
-        <a href="{% url 'manage_resumes' %}">Manage Resumes</a>
-    </li>
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>Links</h3>
+                    <p>Organize your social media, professional profiles, and other links.</p>
+                </div>
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'manage_links' %}">
+                        Manage Links
+                    </a>
+                </div>
+            </article>
 
-    <li>
-        <a href="{% url 'manage_links' %}">Manage Links</a>
-    </li>
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>Forms</h3>
+                    <p>Create contact forms and review messages submitted by visitors.</p>
+                </div>
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'manage_forms' %}">
+                        Manage Forms
+                    </a>
+                </div>
+            </article>
+        </div>
+    </section>
 
-    <li>
-        <a href="{% url 'manage_forms' %}">Manage Forms</a>
-    </li>
-</ul>
+    <section class="dashboard-section">
+        <h2>Website</h2>
 
-<h2>Website</h2>
+        <div class="dashboard-card">
+            <div class="dashboard-card-content">
+                <h3>View Your Website</h3>
+                <p>See the public-facing website your visitors will experience.</p>
+            </div>
 
-<a href="{% url 'home' username=profile.user.username %}">
-    View My Website
-</a>
+            <div class="dashboard-card-actions">
+                <a class="primary-button" href="{% url 'home' username=profile.user.username %}">
+                    View My Website
+                </a>
+            </div>
+        </div>
+    </section>
 
-<h2>Account</h2>
+    <section class="dashboard-section">
+        <h2>Account</h2>
 
-<form method="POST" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Log Out</button>
-</form>
+        <div class="dashboard-card">
+            <div class="dashboard-card-content">
+                <h3>Log Out</h3>
+                <p>End your current session.</p>
+            </div>
 
+            <div class="dashboard-card-actions">
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="button-link" type="submit">
+                        Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}

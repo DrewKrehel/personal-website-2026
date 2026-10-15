@@ -5,17 +5,35 @@
 {% endblock %}
 
 {% block content %}
+<main class="dashboard-page">
+    <a class="back-link" href="{% url 'manage_resumes' %}">
+        &larr; Back to Resumes
+    </a>
 
-<h1>Delete Resume</h1>
+    <section class="dashboard-panel delete-confirmation">
+        <h1>Delete Resume</h1>
 
-<p>Are you sure you want to delete "{{ resume.display_name }}"?</p>
+        <p>
+            Are you sure you want to delete
+            <strong>{{ resume.display_name }}</strong>?
+        </p>
 
-<form method="POST">
-    {% csrf_token %}
+        <p class="delete-warning">
+            This action cannot be undone.
+        </p>
 
-    <button type="submit">Delete Resume</button>
-</form>
+        <div class="confirmation-actions">
+            <form method="POST">
+                {% csrf_token %}
+                <button class="danger-button" type="submit">
+                    Delete Resume
+                </button>
+            </form>
 
-<a href="{% url 'manage_resumes' %}">Cancel</a>
-
+            <a class="button-link" href="{% url 'manage_resumes' %}">
+                Cancel
+            </a>
+        </div>
+    </section>
+</main>
 {% endblock %}

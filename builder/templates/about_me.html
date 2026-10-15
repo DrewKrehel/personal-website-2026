@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>About Me | {{ profile.display_name }}</title>
+<title>About Me | {{ profile.display_name }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>{{ profile.display_name }}</h1>
-    {% if profile.profile_image %}
-        <img src="{{ profile.profile_image.url }}">
-    {% endif %}
-    <h2>{{ profile.email }}</h2>
-    <p>{{ profile.bio }}</p>
+<main class="profile-page">
+    <header class="profile-header">
+        {% if profile.profile_image %}
+        <img class="profile-avatar" src="{{ profile.profile_image.url }}"
+            alt="Profile photo of {{ profile.display_name }}">
+        {% endif %}
+
+        <h1 class="profile-name">{{ profile.display_name }}</h1>
+
+        {% if profile.bio %}
+        <p class="profile-bio">{{ profile.bio }}</p>
+        {% endif %}
+
+        {% if profile.email %}
+        <p class="profile-email">
+            <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+        </p>
+        {% endif %}
+    </header>
+</main>
 {% endblock %}

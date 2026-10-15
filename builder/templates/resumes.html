@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Resumes | {{ profile.display_name }}</title>
+<title>Resumes | {{ profile.display_name }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>{{ profile.display_name }} | Resume Versions</h1>
+<main class="profile-page">
+    <header class="profile-header">
+        <h1 class="profile-name">{{ profile.display_name }}</h1>
+        <p class="profile-bio">Resume Versions</p>
+    </header>
+
     {% if resumes %}
-    <ul>
+    <section class="resume-list" aria-label="Resume versions">
         {% for resume in resumes %}
-        <li>
-            <a href="{{ resume.file.url }}" download>{{ resume.display_name }}</a>
-        </li>
+        <article class="resume-card">
+            <div class="resume-card-content">
+                <h2>{{ resume.display_name }}</h2>
+                <p>Resume document</p>
+            </div>
+
+            <a class="primary-button resume-download" href="{{ resume.file.url }}" download>
+                Download
+            </a>
+        </article>
         {% endfor %}
-    </ul>
+    </section>
+    {% else %}
+    <p class="empty-state">No resumes have been added yet.</p>
     {% endif %}
+</main>
 {% endblock %}

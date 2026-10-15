@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Links | {{ profile.display_name }}</title>
+<title>Links | {{ profile.display_name }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>{{ profile.display_name }} | Link List</h1>
+<main class="profile-page">
+    <header class="profile-header">
+        <h1 class="profile-name">{{ profile.display_name }}</h1>
+        <p class="profile-bio">Links</p>
+    </header>
+
     {% if links %}
-    <ul>
+    <section class="public-link-list" aria-label="Links">
         {% for link in links %}
-        <li>
-            <a href="{{ link.link_url }}">{{ link.display_name }}</a>
-            {% if link.image %}
-                <img src="{{ link.link_image.url }}">
-            {% endif %}
-        </li>
+        <article class="public-link-card">
+            <a class="button-link public-link" href="{{ link.link_url }}" target="_blank" rel="noopener noreferrer">
+                {% if link.link_image %}
+                <img class="public-link-image" src="{{ link.link_image.url }}" alt="">
+                {% endif %}
+
+                <span>{{ link.display_name }}</span>
+            </a>
+        </article>
         {% endfor %}
-    </ul>
+    </section>
+    {% else %}
+    <p class="empty-state">No links have been added yet.</p>
     {% endif %}
+</main>
 {% endblock %}

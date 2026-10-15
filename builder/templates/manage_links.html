@@ -5,32 +5,63 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+<main class="dashboard-page">
+    <a class="back-link" href="{% url 'dashboard' %}">
+        &larr; Back to Dashboard
+    </a>
 
-<h1>Manage Links</h1>
+    <header class="dashboard-header">
+        <h1>Manage Links</h1>
+        <p>Add and organize the links visitors can find on your website.</p>
+    </header>
 
-<h2>Your Links</h2>
+    <section class="dashboard-section">
+        <h2>Your Links</h2>
 
-{% for link in links %}
-    <h3>{{ link.display_name }}</h3>
-    <a href="{{ link.link_url }}">{{ link.link_url }}</a>
+        <div class="dashboard-list">
+            {% for link in links %}
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>{{ link.display_name }}</h3>
 
-    {% if link.link_image %}
-        <img src="{{ link.link_image.url }}" alt="{{ link.display_name }}">
-    {% endif %}
+                    <p>
+                        <a href="{{ link.link_url }}" target="_blank" rel="noopener noreferrer">
+                            {{ link.link_url }}
+                        </a>
+                    </p>
 
-    <a href="{% url 'delete_link' link_id=link.id %}">Delete</a>
-{% empty %}
-    <p>You haven't added any links yet.</p>
-{% endfor %}
+                    {% if link.link_image %}
+                    <img class="managed-link-image" src="{{ link.link_image.url }}" alt="{{ link.display_name }}">
+                    {% endif %}
+                </div>
 
-<h2>Add Link</h2>
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{% url 'delete_link' link_id=link.id %}">
+                        Delete
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <p class="empty-state">
+                You haven't added any links yet.
+            </p>
+            {% endfor %}
+        </div>
+    </section>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <section class="dashboard-section">
+        <h2>Add Link</h2>
 
-    <button type="submit">Add Link</button>
-</form>
+        <div class="dashboard-panel">
+            <form method="POST" enctype="multipart/form-data" class="dashboard-form">
+                {% csrf_token %}
+                {{ form.as_p }}
 
+                <button class="primary-button" type="submit">
+                    Add Link
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
 {% endblock %}

@@ -5,28 +5,57 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+<main class="dashboard-page">
+    <a class="back-link" href="{% url 'dashboard' %}">
+        &larr; Back to Dashboard
+    </a>
 
-<h1>Manage Resumes</h1>
+    <header class="dashboard-header">
+        <h1>Manage Resumes</h1>
+        <p>Upload and organize the resume versions visitors can download.</p>
+    </header>
 
-<h2>Your Resumes</h2>
+    <section class="dashboard-section">
+        <h2>Your Resumes</h2>
 
-{% for resume in resumes %}
-    <h3>{{ resume.display_name }}</h3>
+        <div class="dashboard-list">
+            {% for resume in resumes %}
+            <article class="dashboard-card">
+                <div class="dashboard-card-content">
+                    <h3>{{ resume.display_name }}</h3>
+                </div>
 
-    <a href="{{ resume.file.url }}">View Resume</a>
-    <a href="{% url 'delete_resume' resume_id=resume.id %}">Delete</a>
-{% empty %}
-    <p>You haven't uploaded any resumes yet.</p>
-{% endfor %}
+                <div class="dashboard-card-actions">
+                    <a class="button-link" href="{{ resume.file.url }}">
+                        View Resume
+                    </a>
 
-<h2>Upload Resume</h2>
+                    <a class="button-link" href="{% url 'delete_resume' resume_id=resume.id %}">
+                        Delete
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <p class="empty-state">
+                You haven't uploaded any resumes yet.
+            </p>
+            {% endfor %}
+        </div>
+    </section>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <section class="dashboard-section">
+        <h2>Upload Resume</h2>
 
-    <button type="submit">Upload Resume</button>
-</form>
+        <div class="dashboard-panel">
+            <form method="POST" enctype="multipart/form-data" class="dashboard-form">
+                {% csrf_token %}
+                {{ form.as_p }}
 
+                <button class="primary-button" type="submit">
+                    Upload Resume
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
 {% endblock %}

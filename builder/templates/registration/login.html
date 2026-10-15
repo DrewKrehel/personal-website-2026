@@ -5,14 +5,21 @@
 {% endblock %}
 
 {% block content %}
+<main class="auth-page">
+    <header class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Log in to manage your personal website.</p>
+    </header>
 
-<h1>Login</h1>
+    <section class="auth-card">
+        <form method="POST" class="dashboard-form">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit">Login</button>
-</form>
-
+            <button class="primary-button" type="submit">
+                Log In
+            </button>
+        </form>
+    </section>
+</main>
 {% endblock %}
