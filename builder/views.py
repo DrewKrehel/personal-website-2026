@@ -7,17 +7,43 @@ from .forms import (
     ResumeForm,
     LinkForm,
     FormBuilderForm,
+    IndexThumbnailForm,
 )
 from .models import Profile, Project, Resume, Link, Form, FormSubmission
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
+
 @login_required
 def dashboard(request):
     profile = Profile.objects.get(user=request.user)
 
-    return render(request, "dashboard.html", {"profile": profile})
+    if request.method == "POST":
+        thumbnail_form = IndexThumbnailForm(
+            request.POST,
+            request.FILES,
+            instance=profile,
+        )
+
+        if thumbnail_form.is_valid():
+            thumbnail_form.save()
+            messages.success(
+                request,
+                "Index thumbnail updated successfully.",
+            )
+            return redirect("dashboard")
+    else:
+        thumbnail_form = IndexThumbnailForm(instance=profile)
+
+    return render(
+        request,
+        "dashboard.html",
+        {
+            "profile": profile,
+            "thumbnail_form": thumbnail_form,
+        },
+    )
 
 
 @login_required

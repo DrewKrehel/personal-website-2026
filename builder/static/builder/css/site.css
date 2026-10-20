@@ -677,3 +677,12 @@ select {
 .auth-card .primary-button {
     width: 100%;
 }
+
+.index-thumbnail {
+    display: block;
+    width: min(100%, 304px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    object-fit: cover;
+}

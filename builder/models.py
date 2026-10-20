@@ -9,7 +9,7 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE
     )
-    
+
     featured_section = models.CharField(
         max_length=20,
         choices=[
@@ -21,7 +21,7 @@ class Profile(models.Model):
         ],
         blank=True,
     )
-    
+
     featured_object_id = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -53,6 +53,11 @@ class Profile(models.Model):
         upload_to='profile_images/',
         blank=True,
         help_text="Upload a profile image"
+    )
+
+    index_thumbnail = models.ImageField(
+        upload_to="index_thumbnails/",
+        blank=True,
     )
 
 class Project(models.Model):
@@ -204,4 +209,3 @@ class FormSubmission(models.Model):
     checkbox = models.BooleanField(
         default=False,
     )
-

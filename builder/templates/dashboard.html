@@ -29,6 +29,30 @@
     </section>
 
     <section class="dashboard-section">
+        <h2>Index Thumbnail</h2>
+    
+        <div class="dashboard-panel">
+            <p>
+                Choose the image visitors will see on your website's
+                index page. This is separate from your profile photo.
+            </p>
+    
+            {% if profile.index_thumbnail %}
+            <img class="index-thumbnail-preview" src="{{ profile.index_thumbnail.url }}" alt="Current index thumbnail">
+            {% endif %}
+    
+            <form method="POST" enctype="multipart/form-data" class="dashboard-form">
+                {% csrf_token %}
+                {{ thumbnail_form.as_p }}
+    
+                <button class="primary-button" type="submit">
+                    Save Thumbnail
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
         <h2>Content</h2>
 
         <div class="dashboard-list">

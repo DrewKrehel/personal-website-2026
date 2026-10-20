@@ -50,7 +50,7 @@ class ProfileForm(forms.ModelForm):
             self.data.get("featured_section")
             or self.instance.featured_section
         )
-        
+
         if section == "about":
             self.fields["featured_object_id"].choices = [
                 ("", "Nothing selected"),
@@ -59,7 +59,7 @@ class ProfileForm(forms.ModelForm):
             if self.is_bound:
                 self.data = self.data.copy()
                 self.data["featured_object_id"] = ""
-        
+
         if section == "about":
             self.initial["featured_object_id"] = None
 
@@ -88,7 +88,7 @@ class ProfileForm(forms.ModelForm):
             ("", "Nothing selected"),
             *choices,
         ]
-    
+
     featured_section = forms.ChoiceField(
         choices=[
             ("", "Nothing featured"),
@@ -101,7 +101,7 @@ class ProfileForm(forms.ModelForm):
         required=False,
         label="Featured section",
     )
-    
+
     featured_object_id = forms.TypedChoiceField(
         choices=[("", "Nothing selected")],
         required=False,
@@ -112,13 +112,14 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
-            'display_name',
-            'email',
-            'phone',
-            'bio',
-            'profile_image',
-            'featured_section',
-            'featured_object_id',
+            "display_name",
+            "email",
+            "phone",
+            "bio",
+            "profile_image",
+            "index_thumbnail",
+            "featured_section",
+            "featured_object_id",
         ]
 
 class ProjectForm(forms.ModelForm):
@@ -177,3 +178,9 @@ class FormBuilderForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class IndexThumbnailForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["index_thumbnail"]

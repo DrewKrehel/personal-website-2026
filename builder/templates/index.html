@@ -8,8 +8,8 @@
 <main class="profile-page">
 
     <header class="profile-header">
-        {% if profile.profile_image %}
-        <img class="profile-avatar" src="{{ profile.profile_image.url }}" alt="{{ profile.display_name }}">
+        {% if profile.index_thumbnail %}
+        <img class="index-thumbnail" src="{{ profile.index_thumbnail.url }}" alt="Featured image for {{ profile.display_name }}">
         {% endif %}
 
         <h1 class="profile-name">{{ profile.display_name }}</h1>
