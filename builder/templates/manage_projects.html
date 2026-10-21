@@ -30,14 +30,31 @@
                 </div>
 
                 <div class="dashboard-card-actions">
+                
+                    <form method="POST" action="{% url 'move_project' project_id=project.id direction='up' %}">
+                        {% csrf_token %}
+                        <button class="button-link" type="submit" {% if forloop.first %}disabled{% endif %}>
+                            &uarr; Move Up
+                        </button>
+                    </form>
+                
+                    <form method="POST" action="{% url 'move_project' project_id=project.id direction='down' %}">
+                        {% csrf_token %}
+                        <button class="button-link" type="submit" {% if forloop.last %}disabled{% endif %}>
+                            &darr; Move Down
+                        </button>
+                    </form>
+                
                     <a class="button-link" href="{% url 'edit_project' project_id=project.id %}">
                         Edit
                     </a>
-
+                
                     <a class="button-link" href="{% url 'delete_project' project_id=project.id %}">
                         Delete
                     </a>
+                
                 </div>
+
             </article>
             {% empty %}
             <p class="empty-state">

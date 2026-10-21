@@ -89,6 +89,8 @@ class Project(models.Model):
         help_text="Upload a project image"
     )
 
+    sort_order = models.PositiveIntegerField(default=0)
+
 class Resume(models.Model):
     """Model representing a resume"""
 

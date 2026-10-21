@@ -6,6 +6,11 @@ urlpatterns = [
     path("dashboard/profile/", views.edit_profile, name="edit_profile"),
     path("dashboard/projects/", views.manage_projects, name="manage_projects"),
     path(
+        "dashboard/projects/<int:project_id>/move/<str:direction>/",
+        views.move_project,
+        name="move_project",
+    ),
+    path(
         "dashboard/projects/<int:project_id>/edit/",
         views.edit_project,
         name="edit_project",
@@ -48,7 +53,6 @@ urlpatterns = [
         views.delete_submission,
         name="delete_submission",
     ),
-    
     path("<str:username>/", views.home, name="home"),
     path("<str:username>/about/", views.about_me, name="about"),
     path("<str:username>/projects/", views.projects, name="projects"),

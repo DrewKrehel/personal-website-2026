@@ -107,6 +107,7 @@ def manage_projects(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user
+            project.sort_order = Project.objects.filter(user=request.user).count()
             project.save()
             return redirect("manage_projects")
 
@@ -121,6 +122,53 @@ def manage_projects(request):
             "form": form,
         },
     )
+
+
+@login_required
+def move_project(request, project_id, direction):
+    if request.method != "POST":
+        return redirect("manage_projects")
+
+    if direction not in ("up", "down"):
+        return redirect("manage_projects")
+
+    # Only retrieve projects owned by the logged-in user.
+    projects = list(
+        Project.objects.filter(user=request.user).order_by("sort_order", "id")
+    )
+
+    # Find the selected project in the owner's ordered list.
+    current_index = next(
+        (index for index, project in enumerate(projects) if project.id == project_id),
+        None,
+    )
+
+    if current_index is None:
+        return redirect("manage_projects")
+
+    # Determine the neighboring project.
+    if direction == "up":
+        neighbor_index = current_index - 1
+    else:
+        neighbor_index = current_index + 1
+
+    # Do nothing if the project is already at the boundary.
+    if not 0 <= neighbor_index < len(projects):
+        return redirect("manage_projects")
+
+    # Swap the two projects.
+    projects[current_index], projects[neighbor_index] = (
+        projects[neighbor_index],
+        projects[current_index],
+    )
+
+    # Persist the complete ordering.
+    for position, project in enumerate(projects):
+        if project.sort_order != position:
+            project.sort_order = position
+            project.save(update_fields=["sort_order"])
+
+    return redirect("manage_projects")
 
 
 @login_required
@@ -389,8 +437,8 @@ def about_me(request, username):
 
 
 def projects(request, username):
-    projects = Project.objects.filter(user__username=username)
     profile = Profile.objects.get(user__username=username)
+    projects = Project.objects.filter(user=profile.user).order_by("sort_order", "id")
 
     context = {
         "projects": projects,

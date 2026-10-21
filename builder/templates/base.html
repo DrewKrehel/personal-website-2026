@@ -26,34 +26,55 @@
 
     {% if profile %}
         {% if user.is_authenticated and user == profile.user %}
-        <div class="owner-menu">
-            <a href="{% url 'dashboard' %}">Dashboard</a>
+        <nav class="owner-menu" aria-label="Account navigation">
+            <a class="owner-menu-dashboard" href="{% url 'dashboard' %}">
+                Dashboard
+            </a>
         
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit">Log Out</button>
+                <button class="owner-menu-logout" type="submit">
+                    Log Out
+                </button>
             </form>
-        </div>
+        </nav>
+        
         {% elif not user.is_authenticated %}
-        <div class="owner-menu">
-            <a href="{% url 'login' %}?next={% url 'dashboard' %}">Log In</a>
-        </div>
+        <nav class="owner-menu" aria-label="Account navigation">
+            <a class="owner-menu-login" href="{% url 'login' %}?next={% url 'dashboard' %}">
+                Log In
+            </a>
+        </nav>
         {% endif %}
     {% endif %}
 
 
+
     {% if profile and not is_homepage %}
-    <nav>
-        <ul>
-            <li> <a href="{% url 'home' username=profile.user.username %}">Home</a></li>
-            <li> <a href="{% url 'about' username=profile.user.username %}">About Me</a></li>
-            <li> <a href="{% url 'projects' username=profile.user.username %}">Projects</a></li>
-            <li> <a href="{% url 'resumes' username=profile.user.username %}">Resumes</a></li>
-            <li> <a href="{% url 'links' username=profile.user.username %}">Links</a></li>
-            <li> <a href="{% url 'forms' username=profile.user.username %}">Forms</a></li>
+    <nav class="profile-nav" aria-label="Main navigation">
+        <ul class="profile-nav-links">
+            <li>
+                <a href="{% url 'home' username=profile.user.username %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'about' username=profile.user.username %}">About Me</a>
+            </li>
+            <li>
+                <a href="{% url 'projects' username=profile.user.username %}">Projects</a>
+            </li>
+            <li>
+                <a href="{% url 'resumes' username=profile.user.username %}">Resumes</a>
+            </li>
+            <li>
+                <a href="{% url 'links' username=profile.user.username %}">Links</a>
+            </li>
+            <li>
+                <a href="{% url 'forms' username=profile.user.username %}">Forms</a>
+            </li>
         </ul>
     </nav>
     {% endif %}
+
 
     {% block content %}
 

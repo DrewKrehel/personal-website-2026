@@ -680,9 +680,207 @@ select {
 
 .index-thumbnail {
     display: block;
-    width: min(100%, 304px);
+    width: min(100%, 150px);
     aspect-ratio: 1 / 1;
     margin: 0 auto 16px;
-    border-radius: 50%;
+    border-radius: 10%;
     object-fit: cover;
+}
+
+/* Public profile navigation */
+
+.profile-nav {
+    width: min(100% - 32px, 960px);
+    margin: 0 auto;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgb(32 39 51 / 4%);
+}
+
+.profile-nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.profile-nav-links a {
+    display: block;
+    padding: 9px 16px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition:
+        color 150ms ease,
+        background-color 150ms ease;
+}
+
+.profile-nav-links a:hover {
+    background: #F0F0FF;
+    color: var(--accent);
+}
+
+.profile-nav-links a:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Smaller screens */
+
+@media (max-width: 480px) {
+    .profile-nav {
+        padding: 8px;
+    }
+
+    .profile-nav-links {
+        gap: 4px;
+    }
+
+    .profile-nav-links a {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    .profile-nav-links a {
+        transition: none;
+    }
+}
+
+/* Account navigation: Dashboard, Log In, and Log Out */
+
+.owner-menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    width: min(100% - 32px, 960px);
+    margin: 16px auto;
+}
+
+.owner-menu form {
+    margin: 0;
+}
+
+.owner-menu a,
+.owner-menu button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+/* Primary account action */
+
+.owner-menu-dashboard,
+.owner-menu-login {
+    border-color: var(--accent) !important;
+    background: var(--accent);
+    color: #FFFFFF !important;
+}
+
+.owner-menu-dashboard:hover,
+.owner-menu-login:hover {
+    border-color: #4338CA !important;
+    background: #4338CA;
+}
+
+/* Secondary account action */
+
+.owner-menu-logout {
+    background: var(--surface);
+    color: var(--text-muted);
+}
+
+.owner-menu-logout:hover {
+    border-color: var(--accent);
+    background: #F0F0FF;
+    color: var(--accent);
+}
+
+/* Keyboard accessibility */
+
+.owner-menu a:focus-visible,
+.owner-menu button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* Smaller screens */
+
+@media (max-width: 480px) {
+    .owner-menu {
+        gap: 8px;
+    }
+
+    .owner-menu a,
+    .owner-menu button {
+        min-height: 44px;
+        padding: 9px 12px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .owner-menu a,
+    .owner-menu button {
+        transition: none;
+    }
+}
+
+/* Project ordering controls */
+
+.dashboard-card-actions form {
+    display: flex;
+    margin: 0;
+}
+
+.dashboard-card-actions button.button-link {
+    width: auto;
+    min-width: 90px;
+    min-height: 40px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.dashboard-card-actions button.button-link:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: var(--page-bg);
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+
+.dashboard-card-actions button.button-link:not(:disabled):hover {
+    border-color: var(--accent);
+    background: #F0F0FF;
 }
