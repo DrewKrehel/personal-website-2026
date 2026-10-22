@@ -39,8 +39,15 @@
         {% elif profile.featured_section == "projects" %}
         <h3>{{ featured_object.title }}</h3>
 
-        {% if featured_object.image %}
-        <img class="featured-image" src="{{ featured_object.image.url }}" alt="{{ featured_object.title }}">
+        {% if featured_object.video_url and featured_object.get_video_embed_url %}
+        <div class="project-video">
+            <iframe src="{{ featured_object.get_video_embed_url }}" title="Video for {{ featured_object.title }}" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+        </div>
+        {% elif featured_object.image %}
+        <img class="featured-image" src="{{ featured_object.image.url }}" alt="Image for {{ featured_object.title }}">
         {% endif %}
 
         <p>{{ featured_object.description }}</p>

@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from django import forms
 from .models import Profile, Project, Resume, Link, Form
 
@@ -123,13 +124,42 @@ class ProfileForm(forms.ModelForm):
         ]
 
 class ProjectForm(forms.ModelForm):
+    
+    def clean_video_url(self):
+        video_url = self.cleaned_data.get("video_url", "").strip()
+
+        if not video_url:
+            return ""
+
+        parsed_url = urlparse(video_url)
+        allowed_hosts = {
+            "youtube.com",
+            "www.youtube.com",
+            "m.youtube.com",
+            "youtu.be",
+            "www.youtu.be",
+            "youtube-nocookie.com",
+            "www.youtube-nocookie.com",
+            "vimeo.com",
+            "www.vimeo.com",
+            "player.vimeo.com",
+        }
+
+        if parsed_url.scheme != "https" or parsed_url.hostname not in allowed_hosts:
+            raise forms.ValidationError(
+                "Enter a valid HTTPS YouTube or Vimeo video URL."
+            )
+
+        return video_url
+    
     class Meta:
         model = Project
         fields = [
-            'title',
-            'description',
-            'link',
-            'image',
+            "title",
+            "description",
+            "link",
+            "image",
+            "video_url",
         ]
 
 class ResumeForm(forms.ModelForm):

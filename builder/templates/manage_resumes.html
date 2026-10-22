@@ -25,6 +25,20 @@
                     <h3>{{ resume.display_name }}</h3>
                 </div>
 
+                {% if not forloop.first %}
+                <form method="post" action="{% url 'move_resume' resume.id 'up' %}">
+                    {% csrf_token %}
+                    <button class="button-link" type="submit">Move Up</button>
+                </form>
+                {% endif %}
+                
+                {% if not forloop.last %}
+                <form method="post" action="{% url 'move_resume' resume.id 'down' %}">
+                    {% csrf_token %}
+                    <button class="button-link" type="submit">Move Down</button>
+                </form>
+                {% endif %}
+
                 <div class="dashboard-card-actions">
                     <a class="button-link" href="{{ resume.file.url }}">
                         View Resume

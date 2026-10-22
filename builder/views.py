@@ -13,7 +13,7 @@ from .models import Profile, Project, Resume, Link, Form, FormSubmission
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-
+from django.views.decorators.http import require_POST
 
 @login_required
 def dashboard(request):
@@ -99,7 +99,7 @@ def edit_profile(request):
 
 @login_required
 def manage_projects(request):
-    projects = Project.objects.filter(user=request.user)
+    projects = Project.objects.filter(user=request.user).order_by("sort_order", "id")
 
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES)
@@ -123,52 +123,71 @@ def manage_projects(request):
         },
     )
 
-
-@login_required
-def move_project(request, project_id, direction):
-    if request.method != "POST":
-        return redirect("manage_projects")
+def _move_user_item(request, model, item_id, direction, redirect_name):
+    """Move one of the user's items up or down in its list."""
 
     if direction not in ("up", "down"):
-        return redirect("manage_projects")
+        return redirect(redirect_name)
 
-    # Only retrieve projects owned by the logged-in user.
-    projects = list(
-        Project.objects.filter(user=request.user).order_by("sort_order", "id")
-    )
+    items = list(model.objects.filter(user=request.user).order_by("sort_order", "id"))
 
-    # Find the selected project in the owner's ordered list.
+    # Find the item in this user's list.
     current_index = next(
-        (index for index, project in enumerate(projects) if project.id == project_id),
+        (index for index, item in enumerate(items) if item.id == item_id),
         None,
     )
 
+    # Do nothing if the item doesn't belong to this user.
     if current_index is None:
-        return redirect("manage_projects")
+        return redirect(redirect_name)
 
-    # Determine the neighboring project.
+    # Calculate the position of the neighboring item.
     if direction == "up":
         neighbor_index = current_index - 1
     else:
         neighbor_index = current_index + 1
 
-    # Do nothing if the project is already at the boundary.
-    if not 0 <= neighbor_index < len(projects):
-        return redirect("manage_projects")
+    # Do nothing if the item is already at the relevant boundary.
+    if neighbor_index < 0 or neighbor_index >= len(items):
+        return redirect(redirect_name)
 
-    # Swap the two projects.
-    projects[current_index], projects[neighbor_index] = (
-        projects[neighbor_index],
-        projects[current_index],
+    # Swap the two items.
+    items[current_index], items[neighbor_index] = (
+        items[neighbor_index],
+        items[current_index],
     )
 
-    # Persist the complete ordering.
-    for position, project in enumerate(projects):
-        if project.sort_order != position:
-            project.sort_order = position
-            project.save(update_fields=["sort_order"])
+    # Save a clean sequence of positions: 0, 1, 2, 3, ...
+    for position, item in enumerate(items):
+        if item.sort_order != position:
+            item.sort_order = position
+            item.save(update_fields=["sort_order"])
 
-    return redirect("manage_projects")
+    return redirect(redirect_name)
+
+
+@login_required
+@require_POST
+def move_project(request, project_id, direction):
+    return _move_user_item(request, Project, project_id, direction, "manage_projects")
+
+
+@login_required
+@require_POST
+def move_resume(request, resume_id, direction):
+    return _move_user_item(request, Resume, resume_id, direction, "manage_resumes")
+
+
+@login_required
+@require_POST
+def move_link(request, link_id, direction):
+    return _move_user_item(request, Link, link_id, direction, "manage_links")
+
+
+@login_required
+@require_POST
+def move_form(request, form_id, direction):
+    return _move_user_item(request, Form, form_id, direction, "manage_forms")
 
 
 @login_required
@@ -201,7 +220,7 @@ def delete_project(request, project_id):
 
 @login_required
 def manage_resumes(request):
-    resumes = Resume.objects.filter(user=request.user)
+    resumes = Resume.objects.filter(user=request.user).order_by("sort_order", "id")
 
     if request.method == "POST":
         form = ResumeForm(request.POST, request.FILES)
@@ -209,6 +228,7 @@ def manage_resumes(request):
         if form.is_valid():
             resume = form.save(commit=False)
             resume.user = request.user
+            resume.sort_order = Resume.objects.filter(user=request.user).count()
             resume.save()
             return redirect("manage_resumes")
 
@@ -238,7 +258,7 @@ def delete_resume(request, resume_id):
 
 @login_required
 def manage_links(request):
-    links = Link.objects.filter(user=request.user)
+    links = Link.objects.filter(user=request.user).order_by("sort_order", "id")
 
     if request.method == "POST":
         form = LinkForm(request.POST, request.FILES)
@@ -246,6 +266,7 @@ def manage_links(request):
         if form.is_valid():
             link = form.save(commit=False)
             link.user = request.user
+            link.sort_order = Link.objects.filter(user=request.user).count()
             link.save()
             return redirect("manage_links")
 
@@ -275,7 +296,7 @@ def delete_link(request, link_id):
 
 @login_required
 def manage_forms(request):
-    forms = Form.objects.filter(user=request.user)
+    forms = Form.objects.filter(user=request.user).order_by("sort_order", "id")
 
     if request.method == "POST":
         form = FormBuilderForm(request.POST)
@@ -283,6 +304,7 @@ def manage_forms(request):
         if form.is_valid():
             new_form = form.save(commit=False)
             new_form.user = request.user
+            new_form.sort_order = Form.objects.filter(user=request.user).count()
             new_form.save()
             return redirect("manage_forms")
 
@@ -412,7 +434,7 @@ def home(request, username):
     social_links = Link.objects.filter(
         user=profile.user,
         is_social=True,
-    )
+    ).order_by("sort_order", "id")
 
     context = {
         "profile": profile,
@@ -449,7 +471,9 @@ def projects(request, username):
 
 
 def resumes(request, username):
-    resumes = Resume.objects.filter(user__username=username)
+    resumes = Resume.objects.filter(user__username=username).order_by(
+        "sort_order", "id"
+    )
     profile = Profile.objects.get(user__username=username)
 
     context = {
@@ -461,7 +485,7 @@ def resumes(request, username):
 
 
 def links(request, username):
-    links = Link.objects.filter(user__username=username)
+    links = Link.objects.filter(user__username=username).order_by("sort_order", "id")
     profile = Profile.objects.get(user__username=username)
 
     context = {
@@ -473,7 +497,7 @@ def links(request, username):
 
 
 def forms(request, username):
-    forms = Form.objects.filter(user__username=username)
+    forms = Form.objects.filter(user__username=username).order_by("sort_order", "id")
     profile = Profile.objects.get(user__username=username)
     form_pairs = [
         (

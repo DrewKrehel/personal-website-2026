@@ -11,6 +11,21 @@ urlpatterns = [
         name="move_project",
     ),
     path(
+        "dashboard/resumes/<int:resume_id>/move/<str:direction>/",
+        views.move_resume,
+        name="move_resume",
+    ),
+    path(
+        "dashboard/links/<int:link_id>/move/<str:direction>/",
+        views.move_link,
+        name="move_link",
+    ),
+    path(
+        "dashboard/forms/<int:form_id>/move/<str:direction>/",
+        views.move_form,
+        name="move_form",
+    ),
+    path(
         "dashboard/projects/<int:project_id>/edit/",
         views.edit_project,
         name="edit_project",

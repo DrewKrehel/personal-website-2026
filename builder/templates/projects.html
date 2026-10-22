@@ -19,7 +19,14 @@
                 <a href="{{ project.link }}">{{ project.title }}</a>
             </h2>
 
-            {% if project.image %}
+            {% if project.video_url and project.get_video_embed_url %}
+            <div class="project-video">
+                <iframe src="{{ project.get_video_embed_url }}" title="Video for {{ project.title }}" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+            </div>
+            {% elif project.image %}
             <img class="featured-image" src="{{ project.image.url }}" alt="Image for {{ project.title }}">
             {% endif %}
 
