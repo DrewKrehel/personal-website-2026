@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<main class="profile-page">
+<main class="profile-page resumes-page">
     <header class="profile-header">
         <h1 class="profile-name">{{ profile.display_name }}</h1>
         <p class="profile-bio">Resume Versions</p>
@@ -20,9 +20,25 @@
                 <p>Resume document</p>
             </div>
 
-            <a class="primary-button resume-download" href="{{ resume.file.url }}" download>
-                Download
-            </a>
+            {% if resume.file %}
+            {% with file_url=resume.file.url %}
+            {% if resume.file.name|lower|slice:"-4:" == ".pdf" %}
+            <div class="resume-preview">
+                <iframe src="{{ file_url }}" title="Preview of {{ resume.display_name }}" loading="lazy"></iframe>
+            </div>
+            {% else %}
+            <p class="resume-preview-fallback">
+                Preview isn't available for this file type.
+            </p>
+            {% endif %}
+            {% endwith %}
+
+            <div class="resume-card-actions">
+                <a class="primary-button resume-download" href="{{ resume.file.url }}" download>
+                    Download Resume
+                </a>
+            </div>
+            {% endif %}
         </article>
         {% endfor %}
     </section>
