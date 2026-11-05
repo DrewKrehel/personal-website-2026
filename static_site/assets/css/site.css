@@ -284,6 +284,10 @@ select {
     text-align: center;
 }
 
+.about-description {
+    text-align: center;
+}
+
 /* Projects page */
 .project-list {
     display: grid;
