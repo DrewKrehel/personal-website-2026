@@ -280,6 +280,10 @@ select {
     text-decoration: underline;
 }
 
+.contact-info {
+    text-align: center;
+}
+
 /* Projects page */
 .project-list {
     display: grid;
@@ -580,44 +584,6 @@ select {
     .resume-card-actions .resume-download {
         width: 100%;
     }
-}
-
-/* Public links page */
-.public-link-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 24px;
-    text-align: center;
-}
-
-.public-link-card {
-    min-width: 0;
-}
-
-.public-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 60px;
-    text-align: center;
-}
-
-.public-link-image {
-    display: block;
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    object-fit: cover;
-}
-
-.public-link span {
-    overflow-wrap: anywhere;
 }
 
 /* Link management */
